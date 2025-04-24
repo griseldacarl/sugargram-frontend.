@@ -3,8 +3,10 @@ import SearchHeader from "../components/SearchHeader";
 import UserList from "../components/UserList";
 import React, { useState } from "react";
 import { useFetchUsersQuery } from "../features/api/databaseApi";
+import { useSelector } from "react-redux";
 
 const Search = () => {
+  const { id } = useSelector((state) => state.currentUser);
   const [searchTerm, setSearchTerm] = useState("");
   const {
     data: users,
