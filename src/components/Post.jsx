@@ -14,6 +14,13 @@ import { TbLocationShare } from "react-icons/tb";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Badge from "react-bootstrap/Badge";
+import { useSelector } from "react-redux";
+import {
+  useDeletePostMutation,
+  useFetchPostsQuery,
+  useFetchLikesQuery,
+  useAddLikesMutation,
+} from "../features/api/databaseApi";
 
 const Post = ({
   postImage,
@@ -23,8 +30,20 @@ const Post = ({
   userID,
   userMessage,
   userDisplayName,
+  displayOptions,
 }) => {
   const [imageUrl, setImageUrl] = useState(null);
+  const [DeletePost] = useDeletePostMutation();
+  const { refetch: refetchPosts } = useFetchPostsQuery();
+  const {
+    data: likes,
+    isSuccess: isLikesSuccess,
+    refetch: refetchLikes,
+  } = useFetchLikesQuery();
+  const [AddLikes] = useAddLikesMutation();
+  const { id: currentUserID } = useSelector((store) => store.currentUser);
+
+  const [numberOfLikesForThisPost, setNumberOfLikesForThisPost] = useState(0);
 
   useEffect(() => {
     if (!postImage.includes("user-large-solid")) {
@@ -34,7 +53,26 @@ const Post = ({
       //console.log(`${postImage} => : ${imageUrl}`);
     }
   }, [imageUrl]);
+  useEffect(() => {
+    if (isLikesSuccess) {
+      setNumberOfLikesForThisPost(
+        likes.filter((like) => like.postToLike == postID).length
+      );
+    }
+  }, [likes, numberOfLikesForThisPost]);
+  const handleDelete = async () => {
+    await DeletePost({ id: postID });
+    refetchPosts();
+  };
 
+  const handleAddLike = async () => {
+    await AddLikes({
+      postToLike: postID,
+      userWhoPostedthePost: userID,
+      userWhoLikedPost: currentUserID,
+    });
+    refetchLikes();
+  };
   return (
     <>
       <Card style={{ width: "100%", borderColor: "white" }}>
@@ -45,21 +83,19 @@ const Post = ({
               <Col>
                 {" "}
                 <span className="d-flex justify-content-end">
-                  <Dropdown>
-                    <Dropdown.Toggle variant="light" id="dropdown-basic">
-                      <SlOptions />
-                    </Dropdown.Toggle>
+                  {displayOptions && (
+                    <Dropdown>
+                      <Dropdown.Toggle variant="light" id="dropdown-basic">
+                        <SlOptions />
+                      </Dropdown.Toggle>
 
-                    <Dropdown.Menu>
-                      <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                      <Dropdown.Item href="#/action-2">
-                        Another action
-                      </Dropdown.Item>
-                      <Dropdown.Item href="#/action-3">
-                        Something else
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
+                      <Dropdown.Menu>
+                        <Dropdown.Item onClick={handleDelete}>
+                          Delete
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  )}
                 </span>
               </Col>
             </Row>
@@ -73,18 +109,20 @@ const Post = ({
             <Player playsInline poster={postImage} src={postVideo} />
           )}
           <ButtonGroup aria-label="Basic example">
-            <Button variant="light">
-              <CiHeart />
-              <Badge bg="dark">9</Badge>
-            </Button>
-            <Button variant="light">
-              <FaRegComment />
-              <Badge bg="dark">9</Badge>
-            </Button>
-            <Button variant="light">
-              <TbLocationShare />
-              <Badge bg="dark">9</Badge>
-            </Button>
+            {!displayOptions && isLikesSuccess && (
+              <Button variant="light">
+                <CiHeart />
+                <Badge onClick={handleAddLike} bg="dark">
+                  {numberOfLikesForThisPost}
+                </Badge>
+              </Button>
+            )}
+            {displayOptions && isLikesSuccess && (
+              <Button variant="light" disabled>
+                <CiHeart />
+                <Badge bg="secondary">{numberOfLikesForThisPost}</Badge>
+              </Button>
+            )}
           </ButtonGroup>
           <blockquote className="blockquote mb-0">
             <p>{userMessage}</p>

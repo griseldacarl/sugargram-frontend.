@@ -1,11 +1,46 @@
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
-import { collection, getDocs, addDoc } from "firebase/firestore";
+import {
+  doc,
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
 import { db } from "../../firebase";
 export const databaseApi = createApi({
   reducerPath: "databaseApi",
   baseQuery: fakeBaseQuery(),
-  tagTypes: ["Users", "Posts", "Stories"],
+  tagTypes: ["Users", "Posts", "Stories", "Followers", "Likes"],
   endpoints: (builder) => ({
+    fetchLikes: builder.query({
+      async queryFn() {
+        try {
+          let likes = [];
+          const querySnapshot = await getDocs(collection(db, "likes"));
+          querySnapshot.forEach((doc) => {
+            likes.push({ likesid: doc.id, ...doc.data() });
+          });
+          return { data: likes };
+        } catch (e) {
+          return e;
+        }
+      },
+      invalidatesTags: ["Likes"],
+    }),
+    addLikes: builder.mutation({
+      async queryFn(data) {
+        try {
+          await addDoc(collection(db, "likes"), {
+            ...data,
+          });
+          return { data: data };
+        } catch (e) {
+          return e;
+        }
+      },
+      invalidatesTags: ["Users"],
+    }),
     fetchUsers: builder.query({
       async queryFn() {
         try {
@@ -16,6 +51,19 @@ export const databaseApi = createApi({
           });
           return { data: users };
         } catch (e) {
+          return e;
+        }
+      },
+      invalidatesTags: ["Users"],
+    }),
+    updateUserImage: builder.mutation({
+      async queryFn({ id, src }) {
+        try {
+          const userRef = doc(collection(db, "users"), id);
+          await updateDoc(userRef, { image: src });
+          return { data: src };
+        } catch (e) {
+          console.log(e);
           return e;
         }
       },
@@ -49,6 +97,17 @@ export const databaseApi = createApi({
       },
       invalidatesTags: ["Posts"],
     }),
+    deletePost: builder.mutation({
+      async queryFn(data) {
+        try {
+          await deleteDoc(doc(db, "posts", data.id));
+          return { data: data };
+        } catch (e) {
+          return e;
+        }
+      },
+      invalidatesTags: ["Posts"],
+    }),
 
     fetchStories: builder.query({
       async queryFn() {
@@ -65,14 +124,48 @@ export const databaseApi = createApi({
       },
       invalidatesTags: ["Stories"],
     }),
+    fetchFollwers: builder.query({
+      async queryFn() {
+        try {
+          let followers = [];
+          const querySnapshot = await getDocs(collection(db, "followers"));
+          querySnapshot.forEach((doc) => {
+            followers.push({ followersid: doc.id, ...doc.data() });
+          });
+          return { data: followers };
+        } catch (e) {
+          return e;
+        }
+      },
+      invalidatesTags: ["Followers"],
+    }),
+    addFollowers: builder.mutation({
+      async queryFn(data) {
+        try {
+          await addDoc(collection(db, "followers"), {
+            ...data,
+          });
+          return { data: data };
+        } catch (e) {
+          return e;
+        }
+      },
+      invalidatesTags: ["Followers"],
+    }),
   }),
 });
 
 export const {
   useFetchUsersQuery,
   useAddPostMutation,
+  useUpdateUserImageMutation,
   useFetchPostsQuery,
   useFetchStoriesQuery,
+  useAddFollowersMutation,
+  useFetchFollwersQuery,
+  useDeletePostMutation,
+  useAddLikesMutation,
+  useFetchLikesQuery,
   middleware,
 } = databaseApi;
 export default databaseApi.reducer;

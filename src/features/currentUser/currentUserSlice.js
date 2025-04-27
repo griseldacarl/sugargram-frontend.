@@ -6,6 +6,15 @@ const initialState = {
   name: null,
   token: null,
   isAuthenticated: false,
+  activity: null,
+  age: null,
+  displayName: null,
+  firstname: null,
+  gender: null,
+  height: null,
+  lastname: null,
+  notes: null,
+  image: null,
 };
 
 export const currentUserSlice = createSlice({
@@ -18,6 +27,15 @@ export const currentUserSlice = createSlice({
       state.email = actions.payload.email;
       state.token = actions.payload.token;
       state.isAuthenticated = actions.payload.isAuthenticated;
+      state.activity = actions.payload.activity;
+      state.age = actions.payload.age;
+      state.displayName = actions.payload.displayName;
+      state.firstname = actions.payload.firstname;
+      state.gender = actions.payload.gender;
+      state.height = actions.payload.height;
+      state.lastname = actions.payload.lastname;
+      state.notes = actions.payload.notes;
+      state.image = actions.payload.image;
     },
     setCurrentUserLogout: (state) => {
       state.id = null;
@@ -25,6 +43,15 @@ export const currentUserSlice = createSlice({
       state.email = null;
       state.token = null;
       state.isAuthenticated = false;
+      state.activity = null;
+      state.age = null;
+      state.displayName = null;
+      state.firstname = null;
+      state.gender = null;
+      state.height = null;
+      state.lastname = null;
+      state.notes = null;
+      state.image = null;
     },
   },
 });

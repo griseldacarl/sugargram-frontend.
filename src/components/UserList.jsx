@@ -7,8 +7,8 @@ const UserList = ({ users }) => {
     <ListGroup.Item key={item.userid} style={{ borderColor: "white" }}>
       <User
         userID={item.userid}
-        userActivity={item.useractivity}
-        userAge={item.userage}
+        userActivity={item.activity}
+        userAge={item.age}
         userDisplayName={item.displayName}
         userEmail={item.email}
         userFirstName={item.firstname}

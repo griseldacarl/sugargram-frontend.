@@ -29,7 +29,7 @@ const Login = () => {
         const user = userCredential.user;
         if (isUsersSuccess) {
           let thisUser = users.filter((usr) => usr.email === user.email)[0];
-          console.log(thisUser);
+
           dispatch(
             setCurrentUser({
               id: thisUser.userid,
@@ -37,6 +37,15 @@ const Login = () => {
               name: thisUser.displayName,
               token: user.token,
               isAuthenticated: true,
+              activity: thisUser.activity,
+              age: thisUser.age,
+              displayName: thisUser?.displayName,
+              firstname: thisUser?.firstname,
+              gender: thisUser?.gender,
+              height: thisUser?.height,
+              lastname: thisUser?.lastname,
+              notes: thisUser?.notes,
+              image: thisUser?.image,
             })
           );
           navigate("/");

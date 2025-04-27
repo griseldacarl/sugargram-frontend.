@@ -2,7 +2,7 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import PropTypes from "prop-types";
 
-const Story = ({ storyID, userID, userImage, userDisplayName }) => {
+const Story = ({ userID, userImage, userDisplayName }) => {
   return (
     <>
       <Card style={{ width: "8rem", borderColor: "white" }}>
@@ -21,7 +21,6 @@ const Story = ({ storyID, userID, userImage, userDisplayName }) => {
 };
 
 Story.prototype = {
-  storyID: PropTypes.string,
   userImage: PropTypes.string,
   userID: PropTypes.string,
   userDisplayName: PropTypes.string,

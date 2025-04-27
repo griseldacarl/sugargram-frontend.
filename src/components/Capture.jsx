@@ -22,15 +22,20 @@ const Capture = () => {
       <CloseButton className="fixed-top" onClick={handlClick} />
       {showPost && <PostCapture />}
       {!showPost && <StoryCapture />}
-      <ButtonGroup aria-label="Basic example" className="fixed-bottom bg-light">
-        <Button variant="secondary" onClick={() => handlShowPostClick(true)}>
-          Post
-        </Button>
+      {false && (
+        <ButtonGroup
+          aria-label="Basic example"
+          className="fixed-bottom bg-light"
+        >
+          <Button variant="secondary" onClick={() => handlShowPostClick(true)}>
+            Post
+          </Button>
 
-        <Button variant="secondary" onClick={() => handlShowPostClick(false)}>
-          Story
-        </Button>
-      </ButtonGroup>
+          <Button variant="secondary" onClick={() => handlShowPostClick(false)}>
+            Story
+          </Button>
+        </ButtonGroup>
+      )}
     </>
   );
 };

@@ -1,7 +1,7 @@
 import ListGroup from "react-bootstrap/ListGroup";
 import Post from "./Post";
 import PropTypes from "prop-types";
-const PostList = ({ posts, isOkToListPost }) => {
+const PostList = ({ posts, isOkToListPost, isOkToSeePostOptions }) => {
   const default_image_path =
     window.location.origin + "/defaults/user-large-solid.png";
   const default_video_path =
@@ -17,6 +17,7 @@ const PostList = ({ posts, isOkToListPost }) => {
         userDisplayName={item.userDisplayName}
         userID={item.userID}
         userMessage={item.userMessage}
+        displayOptions={isOkToSeePostOptions}
       />
     </ListGroup.Item>
   ));

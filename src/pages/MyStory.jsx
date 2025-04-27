@@ -11,13 +11,19 @@ const MyStory = () => {
   const { data: posts, isSuccess } = useFetchPostsQuery();
   let filteredPosts = [];
 
-  filteredPosts = posts.filter((post) => post.userID == userID);
+  if (isSuccess) {
+    filteredPosts = posts.filter((post) => post.userID == userID);
+  }
 
   return (
     <>
       <Header />
       <StorySummary postsCount={filteredPosts.length} />
-      <PostList posts={filteredPosts} isOkToListPost={isSuccess} />
+      <PostList
+        posts={filteredPosts}
+        isOkToListPost={isSuccess}
+        isOkToSeePostOptions={true}
+      />
       <Footer />
     </>
   );
