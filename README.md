@@ -12,4 +12,4 @@ car2200905@maricopa.edu
 
 The password for each of these addresses is 123456. 
 This is what the login screen should look like:
-![Login]()
+![Login](SugarGramLogin "Login")
